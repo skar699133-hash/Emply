@@ -28,12 +28,21 @@ class Database {
       client.release();
       console.log('Connected to PostgreSQL successfully.');
     } else {
-      console.log(`Initializing embedded PostgreSQL (PGlite) in: ${config.pgliteDataDir}`);
-      const dirPath = path.resolve(config.pgliteDataDir);
-      if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
+      // In constrained memory environments (like Render's 512MB free tier),
+      // filesystem PGlite allocates ~470MB RSS, which risks OOM kills.
+      // Use in-memory PGlite in production unless explicitly configured with PGLITE_DIR.
+      const useMemoryDb = process.env.NODE_ENV === 'production' && !process.env.PGLITE_DIR;
+      if (useMemoryDb) {
+        console.log('Initializing memory-optimized embedded PostgreSQL (PGlite) for 512MB container...');
+        this.pglite = new PGlite();
+      } else {
+        console.log(`Initializing embedded PostgreSQL (PGlite) in: ${config.pgliteDataDir}`);
+        const dirPath = path.resolve(config.pgliteDataDir);
+        if (!fs.existsSync(dirPath)) {
+          fs.mkdirSync(dirPath, { recursive: true });
+        }
+        this.pglite = new PGlite(dirPath);
       }
-      this.pglite = new PGlite(dirPath);
       await this.pglite.waitReady;
       console.log('PGlite PostgreSQL engine is ready.');
     }
