@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Marquee } from '../components/ui/marquee';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Testimonial {
   name: string;
@@ -188,6 +189,8 @@ export const LoginPage: React.FC = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [redirectingUserName, setRedirectingUserName] = useState<string>('Alex Rivera');
 
   const fallbackDemoList = [
     { email: 'alex.rivera@nexora.internal', name: 'Alex Rivera', role: 'Employee', title: 'Senior Software Engineer' },
@@ -205,15 +208,18 @@ export const LoginPage: React.FC = () => {
       if (mode === 'signup') {
         if (!fullName.trim()) throw new Error('Please enter your full name.');
         await signUpWithEmail(email, password, fullName.trim());
+        setRedirectingUserName(fullName.trim());
         setSuccessMsg('Account created successfully!');
       } else {
         await login(email, password);
+        const namePart = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+        setRedirectingUserName(namePart || 'Workspace Member');
         setSuccessMsg('Signed in successfully!');
       }
-      setTimeout(() => navigate('/'), 300);
+      setIsRedirecting(true);
+      setTimeout(() => navigate('/'), 700);
     } catch (err: any) {
       setErrorMsg(err.message || 'Authentication failed. Please verify credentials.');
-    } finally {
       setLoading(false);
     }
   };
@@ -223,13 +229,15 @@ export const LoginPage: React.FC = () => {
     setErrorMsg(null);
     setSuccessMsg(null);
     try {
-      await loginWithGoogle();
+      const res: any = await loginWithGoogle();
+      const displayName = res?.user?.displayName || 'Google Member';
+      setRedirectingUserName(displayName);
       setSuccessMsg('Signed in with Google!');
-      setTimeout(() => navigate('/'), 300);
+      setIsRedirecting(true);
+      setTimeout(() => navigate('/'), 700);
     } catch (err: any) {
       console.error('Google sign-in error:', err);
       setErrorMsg(err.message || 'Google sign-in failed. Please verify your Firebase configuration.');
-    } finally {
       setGoogleLoading(false);
     }
   };
@@ -238,12 +246,21 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
     setErrorMsg(null);
     try {
+      const matched: any = (demoUsers || fallbackDemoList).find((u: any) => u.email === targetEmail);
+      const name = matched?.fullName || matched?.name || 'Workspace Member';
+      setRedirectingUserName(name);
+      setIsRedirecting(true);
       await switchUser(targetEmail);
-      navigate('/');
+      setTimeout(() => {
+        if (targetEmail.includes('chen')) navigate('/manager');
+        else if (targetEmail.includes('rostova')) navigate('/hr');
+        else if (targetEmail.includes('wright')) navigate('/admin');
+        else navigate('/');
+      }, 700);
     } catch (err: any) {
       setErrorMsg('Failed to select demo persona.');
-    } finally {
       setLoading(false);
+      setIsRedirecting(false);
     }
   };
 
@@ -303,246 +320,297 @@ export const LoginPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* TOP LAYER: AUTHENTIC GLASSMORPHIC LOGIN CARD */}
       {/* ========================================================================= */}
-      <div 
+      <motion.div 
+        layout
         style={{
           backdropFilter: 'blur(28px)',
           WebkitBackdropFilter: 'blur(28px)',
         }}
-        className="relative z-20 w-full max-w-md bg-white/35 border border-white/60 rounded-3xl p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(44,62,80,0.18),0_0_0_1px_rgba(255,255,255,0.8)_inset] space-y-4.5 my-8 transition-all"
+        className="relative z-20 w-full max-w-md bg-white/35 border border-white/60 rounded-3xl p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(44,62,80,0.18),0_0_0_1px_rgba(255,255,255,0.8)_inset] space-y-4.5 my-8 transition-all overflow-hidden"
       >
-        
-        {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#2C3E50]/90 backdrop-blur-md mx-auto flex items-center justify-center text-white shadow-md border border-white/30">
-            <UserIcon className="w-6 h-6 text-[#ECF0F1]" strokeWidth={2.2} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-black text-[#2C3E50] tracking-tight">EMPLY</h1>
-            <p className="text-xs text-[#2C3E50]/80 font-medium mt-0.5">Employee-First Operations & Coordination Platform</p>
-          </div>
-        </div>
+        <AnimatePresence mode="wait">
+          {isRedirecting ? (
+            <motion.div
+              key="auth-success"
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="py-10 text-center space-y-4"
+            >
+              <div className="relative mx-auto w-16 h-16">
+                <div className="absolute inset-0 rounded-2xl bg-[#2C3E50]/15 animate-ping opacity-40" />
+                <div className="relative w-16 h-16 rounded-2xl bg-[#2C3E50] flex items-center justify-center text-white shadow-lg border border-white/40">
+                  <UserIcon className="w-8 h-8 text-[#ECF0F1]" strokeWidth={2.2} />
+                </div>
+              </div>
 
-        {/* Status Feedback Messages */}
-        {errorMsg && (
-          <div 
-            style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
-            className="p-3 rounded-xl bg-rose-50/80 border border-rose-200/90 text-xs text-rose-800 flex items-start gap-2 shadow-xs"
-          >
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
-            <span className="font-medium">{errorMsg}</span>
-          </div>
-        )}
+              <div className="space-y-1.5">
+                <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 text-[11px] font-bold">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Authenticated</span>
+                </div>
+                <h2 className="text-xl font-black text-[#2C3E50] tracking-tight">
+                  Welcome, {redirectingUserName}
+                </h2>
+                <p className="text-xs text-[#2C3E50]/75 font-medium">
+                  Loading your EMPLY workplace dashboard...
+                </p>
+              </div>
 
-        {successMsg && (
-          <div 
-            style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
-            className="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/90 text-xs text-emerald-800 flex items-center gap-2 shadow-xs"
-          >
-            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
-            <span className="font-medium">{successMsg}</span>
-          </div>
-        )}
-
-        {/* Google Sign In Button */}
-        <button
-          type="button"
-          onClick={handleGoogleSignIn}
-          disabled={googleLoading || loading}
-          style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
-          className="w-full py-2.5 px-4 rounded-xl bg-white/45 hover:bg-white/75 border border-white/70 text-[#2C3E50] text-xs font-semibold transition-all flex items-center justify-center gap-2.5 shadow-xs hover:shadow-sm cursor-pointer disabled:opacity-50"
-        >
-          {/* Official Google G Logo */}
-          <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-            <path
-              fill="#4285F4"
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-            />
-            <path
-              fill="#EA4335"
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-            />
-          </svg>
-          <span>{googleLoading ? 'Connecting to Google...' : 'Continue with Google'}</span>
-        </button>
-
-        {/* Divider */}
-        <div className="relative flex items-center justify-center my-3">
-          <div className="border-t border-[#2C3E50]/20 w-full" />
-          <span 
-            style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
-            className="bg-white/50 border border-white/60 px-3 py-0.5 rounded-full text-[10px] uppercase font-bold text-[#2C3E50]/75 absolute tracking-wider shadow-2xs"
-          >
-            or with work email
-          </span>
-        </div>
-
-        {/* Mode Selector Tabs (Sign In vs Create Account) */}
-        <div 
-          style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
-          className="flex rounded-xl bg-white/25 border border-white/50 p-1 text-xs"
-        >
-          <button
-            type="button"
-            onClick={() => setMode('signin')}
-            className={`flex-1 py-1.5 rounded-lg font-semibold transition-all ${
-              mode === 'signin' 
-                ? 'bg-white/80 text-[#2C3E50] shadow-xs' 
-                : 'text-[#2C3E50]/70 hover:text-[#2C3E50]'
-            }`}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode('signup')}
-            className={`flex-1 py-1.5 rounded-lg font-semibold transition-all ${
-              mode === 'signup' 
-                ? 'bg-white/80 text-[#2C3E50] shadow-xs' 
-                : 'text-[#2C3E50]/70 hover:text-[#2C3E50]'
-            }`}
-          >
-            Create Account
-          </button>
-        </div>
-
-        {/* Authentication Form */}
-        <form onSubmit={handleSubmit} className="space-y-3">
-          {mode === 'signup' && (
-            <div>
-              <label className="block text-[11px] font-bold text-[#2C3E50] mb-1">Full Name</label>
-              <div className="relative">
-                <UserIcon className="w-4 h-4 text-[#2C3E50]/60 absolute left-3 top-2.5" />
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="e.g. Alex Rivera"
-                  style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
-                  className="w-full bg-white/40 border border-white/60 rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] font-medium focus:bg-white/70 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#2C3E50]/50 transition-all shadow-2xs"
+              {/* Smooth linear shimmer progress bar */}
+              <div className="w-48 h-1.5 bg-[#2C3E50]/10 rounded-full mx-auto overflow-hidden relative mt-2">
+                <motion.div 
+                  className="h-full bg-gradient-to-r from-[#2C3E50] via-indigo-500 to-[#2C3E50] rounded-full"
+                  initial={{ x: '-100%' }}
+                  animate={{ x: '100%' }}
+                  transition={{ repeat: Infinity, duration: 1.1, ease: 'easeInOut' }}
                 />
               </div>
-            </div>
-          )}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="auth-form"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.25 }}
+              className="space-y-4.5"
+            >
+              {/* Brand Header */}
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 rounded-2xl bg-[#2C3E50]/90 backdrop-blur-md mx-auto flex items-center justify-center text-white shadow-md border border-white/30">
+                  <UserIcon className="w-6 h-6 text-[#ECF0F1]" strokeWidth={2.2} />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-black text-[#2C3E50] tracking-tight">EMPLY</h1>
+                  <p className="text-xs text-[#2C3E50]/80 font-medium mt-0.5">Employee-First Operations & Coordination Platform</p>
+                </div>
+              </div>
 
-          <div>
-            <label className="block text-[11px] font-bold text-[#2C3E50] mb-1">Work Email</label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-[#2C3E50]/60 absolute left-3 top-2.5" />
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@company.com"
-                style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
-                className="w-full bg-white/40 border border-white/60 rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] font-medium focus:bg-white/70 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#2C3E50]/50 transition-all shadow-2xs"
-              />
-            </div>
-          </div>
-
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="text-[11px] font-bold text-[#2C3E50]">Password</label>
-              {mode === 'signin' && (
-                <span className="text-[10px] text-[#2C3E50]/70 font-medium">Demo pass: password123</span>
+              {/* Status Feedback Messages */}
+              {errorMsg && (
+                <div 
+                  style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                  className="p-3 rounded-xl bg-rose-50/80 border border-rose-200/90 text-xs text-rose-800 flex items-start gap-2 shadow-xs"
+                >
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
+                  <span className="font-medium">{errorMsg}</span>
+                </div>
               )}
-            </div>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-[#2C3E50]/60 absolute left-3 top-2.5" />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
-                className="w-full bg-white/40 border border-white/60 rounded-xl pl-9 pr-9 py-2 text-xs text-[#2C3E50] font-medium focus:bg-white/70 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#2C3E50]/50 transition-all shadow-2xs"
-              />
+
+              {successMsg && (
+                <div 
+                  style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                  className="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/90 text-xs text-emerald-800 flex items-center gap-2 shadow-xs"
+                >
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                  <span className="font-medium">{successMsg}</span>
+                </div>
+              )}
+
+              {/* Google Sign In Button */}
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-[#2C3E50]/60 hover:text-[#2C3E50] cursor-pointer"
+                onClick={handleGoogleSignIn}
+                disabled={googleLoading || loading}
+                style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                className="w-full py-2.5 px-4 rounded-xl bg-white/45 hover:bg-white/75 border border-white/70 text-[#2C3E50] text-xs font-semibold transition-all flex items-center justify-center gap-2.5 shadow-xs hover:shadow-sm cursor-pointer disabled:opacity-50"
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {/* Official Google G Logo */}
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  />
+                </svg>
+                <span>{googleLoading ? 'Connecting to Google...' : 'Continue with Google'}</span>
               </button>
-            </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading || googleLoading}
-            className="w-full py-2.5 rounded-xl bg-[#2C3E50]/90 hover:bg-[#2C3E50] text-white font-semibold text-xs shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-50"
-          >
-            {loading ? (
-              <span>Authenticating...</span>
-            ) : (
-              <>
-                <span>{mode === 'signin' ? 'Sign In to Workspace' : 'Create Workplace Account'}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </>
-            )}
-          </button>
-        </form>
-
-        {/* Demo Personas for Quick Access */}
-        <div className="pt-3 border-t border-[#2C3E50]/20 space-y-2">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="font-bold text-[#2C3E50] flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5 text-[#2C3E50]/70" />
-              Quick Demo Personas:
-            </span>
-            <span className="text-[10px] text-[#2C3E50]/70 font-medium">1-click login</span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2">
-            {(demoUsers && demoUsers.length > 0 ? demoUsers.slice(0, 4) : fallbackDemoList).map((u: any) => {
-              const name = u.fullName || u.full_name || u.name || (u.email ? u.email.split('@')[0] : 'User');
-              const role = (u.role || 'EMPLOYEE').toUpperCase();
-              return (
-                <button
-                  key={u.id || u.email}
-                  type="button"
-                  onClick={() => handleDemoSelect(u.email)}
-                  disabled={loading}
+              {/* Divider */}
+              <div className="relative flex items-center justify-center my-3">
+                <div className="border-t border-[#2C3E50]/20 w-full" />
+                <span 
                   style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
-                  className="p-2 rounded-xl bg-white/35 hover:bg-white/70 text-left border border-white/50 hover:border-white/90 transition-all flex flex-col cursor-pointer group shadow-2xs hover:shadow-xs"
+                  className="bg-white/50 border border-white/60 px-3 py-0.5 rounded-full text-[10px] uppercase font-bold text-[#2C3E50]/75 absolute tracking-wider shadow-2xs"
                 >
-                  <div className="flex items-center justify-between w-full">
-                    <span className="font-bold text-[11px] text-[#2C3E50] group-hover:text-black truncate">
-                      {name}
-                    </span>
-                    <span className="text-[9px] uppercase px-1 py-0.2 rounded bg-white/75 text-[#2C3E50] font-extrabold border border-white/60">
-                      {role === 'EMPLOYEE' ? 'Emp' : role === 'MANAGER' ? 'Mgr' : role === 'SKIP_LEVEL_MANAGER' ? 'VP' : 'HR'}
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-[#2C3E50]/70 truncate mt-0.5 font-medium">
-                    {u.jobTitle || u.job_title || u.title || u.email}
-                  </span>
+                  or with work email
+                </span>
+              </div>
+
+              {/* Mode Selector Tabs (Sign In vs Create Account) */}
+              <div 
+                style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                className="flex rounded-xl bg-white/25 border border-white/50 p-1 text-xs"
+              >
+                <button
+                  type="button"
+                  onClick={() => setMode('signin')}
+                  className={`flex-1 py-1.5 rounded-lg font-semibold transition-all ${
+                    mode === 'signin' 
+                      ? 'bg-white/80 text-[#2C3E50] shadow-xs' 
+                      : 'text-[#2C3E50]/70 hover:text-[#2C3E50]'
+                  }`}
+                >
+                  Sign In
                 </button>
-              );
-            })}
-          </div>
-        </div>
+                <button
+                  type="button"
+                  onClick={() => setMode('signup')}
+                  className={`flex-1 py-1.5 rounded-lg font-semibold transition-all ${
+                    mode === 'signup' 
+                      ? 'bg-white/80 text-[#2C3E50] shadow-xs' 
+                      : 'text-[#2C3E50]/70 hover:text-[#2C3E50]'
+                  }`}
+                >
+                  Create Account
+                </button>
+              </div>
 
-        {/* Footer info */}
-        <div className="pt-1 text-center text-[10px] text-[#2C3E50]/70 flex items-center justify-center gap-2 font-medium">
-          <span className="flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3 text-[#2C3E50]" /> Enterprise Grade
-          </span>
-          <span>•</span>
-          <span>End-to-End Encrypted</span>
-        </div>
+              {/* Authentication Form */}
+              <form onSubmit={handleSubmit} className="space-y-3">
+                {mode === 'signup' && (
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#2C3E50] mb-1">Full Name</label>
+                    <div className="relative">
+                      <UserIcon className="w-4 h-4 text-[#2C3E50]/60 absolute left-3 top-2.5" />
+                      <input
+                        type="text"
+                        required
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        placeholder="e.g. Alex Rivera"
+                        style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                        className="w-full bg-white/40 border border-white/60 rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] font-medium focus:bg-white/70 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#2C3E50]/50 transition-all shadow-2xs"
+                      />
+                    </div>
+                  </div>
+                )}
 
-      </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-[#2C3E50] mb-1">Work Email</label>
+                  <div className="relative">
+                    <Mail className="w-4 h-4 text-[#2C3E50]/60 absolute left-3 top-2.5" />
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="name@company.com"
+                      style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                      className="w-full bg-white/40 border border-white/60 rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] font-medium focus:bg-white/70 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#2C3E50]/50 transition-all shadow-2xs"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[11px] font-bold text-[#2C3E50]">Password</label>
+                    {mode === 'signin' && (
+                      <span className="text-[10px] text-[#2C3E50]/70 font-medium">Demo pass: password123</span>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-[#2C3E50]/60 absolute left-3 top-2.5" />
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                      className="w-full bg-white/40 border border-white/60 rounded-xl pl-9 pr-9 py-2 text-xs text-[#2C3E50] font-medium focus:bg-white/70 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#2C3E50]/50 transition-all shadow-2xs"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-2.5 text-[#2C3E50]/60 hover:text-[#2C3E50] cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading || googleLoading}
+                  className="w-full py-2.5 rounded-xl bg-[#2C3E50]/90 hover:bg-[#2C3E50] text-white font-semibold text-xs shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-50"
+                >
+                  {loading ? (
+                    <span>Authenticating...</span>
+                  ) : (
+                    <>
+                      <span>{mode === 'signin' ? 'Sign In to Workspace' : 'Create Workplace Account'}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </>
+                  )}
+                </button>
+              </form>
+
+              {/* Demo Personas for Quick Access */}
+              <div className="pt-3 border-t border-[#2C3E50]/20 space-y-2">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="font-bold text-[#2C3E50] flex items-center gap-1.5">
+                    <Users className="w-3.5 h-3.5 text-[#2C3E50]/70" />
+                    Quick Demo Personas:
+                  </span>
+                  <span className="text-[10px] text-[#2C3E50]/70 font-medium">1-click login</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  {(demoUsers && demoUsers.length > 0 ? demoUsers.slice(0, 4) : fallbackDemoList).map((u: any) => {
+                    const name = u.fullName || u.full_name || u.name || (u.email ? u.email.split('@')[0] : 'User');
+                    const role = (u.role || 'EMPLOYEE').toUpperCase();
+                    return (
+                      <button
+                        key={u.id || u.email}
+                        type="button"
+                        onClick={() => handleDemoSelect(u.email)}
+                        disabled={loading}
+                        style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                        className="p-2 rounded-xl bg-white/35 hover:bg-white/70 text-left border border-white/50 hover:border-white/90 transition-all flex flex-col cursor-pointer group shadow-2xs hover:shadow-xs"
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <span className="font-bold text-[11px] text-[#2C3E50] group-hover:text-black truncate">
+                            {name}
+                          </span>
+                          <span className="text-[9px] uppercase px-1 py-0.2 rounded bg-white/75 text-[#2C3E50] font-extrabold border border-white/60">
+                            {role === 'EMPLOYEE' ? 'Emp' : role === 'MANAGER' ? 'Mgr' : role === 'SKIP_LEVEL_MANAGER' ? 'VP' : 'HR'}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-[#2C3E50]/70 truncate mt-0.5 font-medium">
+                          {u.jobTitle || u.job_title || u.title || u.email}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Footer info */}
+              <div className="pt-1 text-center text-[10px] text-[#2C3E50]/70 flex items-center justify-center gap-2 font-medium">
+                <span className="flex items-center gap-1">
+                  <ShieldCheck className="w-3 h-3 text-[#2C3E50]" /> Enterprise Grade
+                </span>
+                <span>•</span>
+                <span>End-to-End Encrypted</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 };

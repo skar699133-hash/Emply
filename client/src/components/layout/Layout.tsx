@@ -16,6 +16,7 @@ import {
   Moon,
   User
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const Layout: React.FC = () => {
   const { user, switchUser, logout, loading } = useAuth();
@@ -38,11 +39,25 @@ export const Layout: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#ECF0F1] flex items-center justify-center">
-        <div className="bg-white border border-[#BDC3C7] rounded-xl p-5 shadow-xs flex items-center gap-3 text-xs text-[#2C3E50] font-semibold">
-          <div className="w-4 h-4 border-2 border-[#2C3E50] border-t-transparent rounded-full animate-spin" />
-          <span>Loading workspace...</span>
-        </div>
+      <div className="min-h-screen bg-[#ECF0F1] flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
+          className="bg-white/80 border border-white/80 rounded-2xl p-6 shadow-xl flex flex-col items-center gap-3 text-center max-w-xs"
+        >
+          <div className="w-10 h-10 rounded-xl bg-[#2C3E50] text-white flex items-center justify-center shadow-xs">
+            <User className="w-5 h-5 text-[#ECF0F1]" />
+          </div>
+          <div>
+            <div className="text-xs font-bold text-[#2C3E50]">Loading EMPLY Workspace...</div>
+            <div className="text-[10px] text-[#7F8C8D]">Preparing your dashboard</div>
+          </div>
+          <div className="w-36 h-1 bg-[#BDC3C7]/40 rounded-full overflow-hidden mt-1">
+            <div className="h-full bg-[#2C3E50] rounded-full animate-pulse w-2/3" />
+          </div>
+        </motion.div>
       </div>
     );
   }
@@ -280,9 +295,16 @@ export const Layout: React.FC = () => {
           </div>
         </header>
 
-        {/* Content Body */}
+        {/* Content Body with smooth page entrance animation */}
         <main className="flex-1 p-7 max-w-5xl w-full">
-          <Outlet />
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 14, filter: 'blur(3px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Outlet />
+          </motion.div>
         </main>
       </div>
     </div>
