@@ -18,15 +18,33 @@ class Database {
     if (this.initialized) return;
 
     if (config.databaseUrl) {
-      console.log('Connecting to external PostgreSQL via DATABASE_URL...');
+      console.log('Connecting to PostgreSQL database via DATABASE_URL...');
+      const isLocal = config.databaseUrl.includes('localhost') || config.databaseUrl.includes('127.0.0.1');
+      const needsSsl = process.env.NODE_ENV === 'production' && !isLocal && !config.databaseUrl.includes('sslmode=disable');
+
       this.pgPool = new pg.Pool({
         connectionString: config.databaseUrl,
-        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+        ssl: needsSsl ? { rejectUnauthorized: false } : false,
       });
-      // Test connection
-      const client = await this.pgPool.connect();
-      client.release();
-      console.log('Connected to PostgreSQL successfully.');
+
+      try {
+        const client = await this.pgPool.connect();
+        client.release();
+        console.log('✅ Connected to PostgreSQL database successfully.');
+      } catch (err: any) {
+        if (needsSsl && (err.message?.includes('does not support SSL') || err.message?.includes('SSL'))) {
+          console.log('Notice: PostgreSQL does not support SSL. Retrying without SSL...');
+          this.pgPool = new pg.Pool({
+            connectionString: config.databaseUrl,
+            ssl: false,
+          });
+          const client = await this.pgPool.connect();
+          client.release();
+          console.log('✅ Connected to PostgreSQL database successfully (direct connection).');
+        } else {
+          throw err;
+        }
+      }
     } else {
       // In constrained memory environments (like Render's 512MB free tier),
       // filesystem PGlite allocates ~470MB RSS, which risks OOM kills.
