@@ -7,7 +7,5 @@ export const config = {
   jwtExpiresIn: '7d',
   geminiApiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '',
   geminiModel: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
-  databaseUrl: process.env.DATABASE_URL || '',
-  pgliteDataDir: process.env.PGLITE_DIR || './.pgdata',
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
 };
