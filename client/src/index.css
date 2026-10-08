@@ -1,0 +1,391 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #ECF0F1;            /* 5. Clouds Canvas */
+    --color-surface: #FFFFFF;       /* Pure White Cards */
+    --color-surface-hover: #F8F9FA;
+    --color-border: #BDC3C7;        /* 4. Silver Border */
+    --color-border-subtle: #D5DBDB;
+    --color-primary: #2C3E50;       /* 1. Midnight Navy */
+    --color-primary-hover: #34495E; /* 2. Slate Navy */
+    --color-text: #2C3E50;
+    --color-heading: #34495E;
+    --color-muted: #7F8C8D;         /* 3. Muted Gray */
+  }
+
+  html.dark {
+    --color-bg: #1A252F;            /* Deep Midnight Canvas */
+    --color-surface: #243342;       /* Slate Navy Cards */
+    --color-surface-hover: #2C3E50;
+    --color-border: #3E5165;        /* Dark Muted Border */
+    --color-border-subtle: #2F3E4E;
+    --color-primary: #ECF0F1;       /* Light Accent */
+    --color-primary-hover: #FFFFFF;
+    --color-text: #ECF0F1;          /* Clouds Text */
+    --color-heading: #FFFFFF;
+    --color-muted: #95A5A6;         /* Light Silver Muted */
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+}
+
+/* Custom scrollbars with Silver & Clouds palette */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #ECF0F1;
+}
+::-webkit-scrollbar-thumb {
+  background: #BDC3C7;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7F8C8D;
+}
+
+/* Clean Professional 3D Layered Cards */
+.glass-panel {
+  background: #FFFFFF;
+  border: 1px solid #BDC3C7;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.95),
+    0 2px 4px 0 rgba(44, 62, 80, 0.04),
+    0 6px 20px -3px rgba(44, 62, 80, 0.09),
+    0 3px 8px -1px rgba(44, 62, 80, 0.04);
+}
+
+.glass-card, .card-3d {
+  background: #FFFFFF;
+  border: 1px solid #BDC3C7;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.95),
+    0 2px 4px 0 rgba(44, 62, 80, 0.04),
+    0 6px 20px -3px rgba(44, 62, 80, 0.09),
+    0 3px 8px -1px rgba(44, 62, 80, 0.04);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-hover, .card-3d-hover {
+  background: #FFFFFF;
+  border: 1px solid #BDC3C7;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.95),
+    0 2px 4px 0 rgba(44, 62, 80, 0.04),
+    0 6px 20px -3px rgba(44, 62, 80, 0.09),
+    0 3px 8px -1px rgba(44, 62, 80, 0.04);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-hover:hover, .card-3d-hover:hover {
+  background: #FFFFFF;
+  border-color: #7F8C8D;
+  box-shadow: 
+    inset 0 1px 0 0 #FFFFFF,
+    0 4px 8px 0 rgba(44, 62, 80, 0.05),
+    0 16px 36px -4px rgba(44, 62, 80, 0.14),
+    0 6px 14px -2px rgba(44, 62, 80, 0.07);
+  transform: translateY(-2.5px);
+}
+
+.card-3d-subtle {
+  background: #FFFFFF;
+  border: 1px solid #BDC3C7;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+    0 1px 3px 0 rgba(44, 62, 80, 0.03),
+    0 3px 10px -1px rgba(44, 62, 80, 0.06);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ========================================================================= */
+/* COMPREHENSIVE DARK THEME SYSTEM */
+/* ========================================================================= */
+html.dark {
+  color-scheme: dark;
+  background-color: #0F172A;
+}
+
+html.dark body {
+  background-color: #0F172A;
+  color: #F8FAFC;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #0F172A;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #2E3E50;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4A6382;
+}
+
+/* Headings and all dark text forced to crisp light in dark mode */
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6 {
+  color: #F8FAFC !important;
+}
+
+/* Match all dark text utilities */
+html.dark [class*="text-[#2C3E50]"],
+html.dark [class*="text-[#34495E]"],
+html.dark [class*="text-slate-900"],
+html.dark [class*="text-slate-800"],
+html.dark [class*="text-slate-700"],
+html.dark [class*="text-slate-600"],
+html.dark [class*="text-blue-600"],
+html.dark [class*="text-brand-600"] {
+  color: #F1F5F9 !important;
+}
+
+/* Match all muted text utilities */
+html.dark [class*="text-[#7F8C8D]"],
+html.dark [class*="text-slate-500"],
+html.dark [class*="text-slate-400"] {
+  color: #94A3B8 !important;
+}
+
+/* Match hover text */
+html.dark [class*="hover:text-[#2C3E50]"]:hover,
+html.dark [class*="hover:text-[#34495E]"]:hover,
+html.dark [class*="hover:text-slate-900"]:hover,
+html.dark [class*="hover:text-slate-700"]:hover {
+  color: #FFFFFF !important;
+}
+
+/* Surface backgrounds */
+html.dark .bg-white,
+html.dark [class*="bg-white"] {
+  background-color: #1C2836 !important;
+}
+
+html.dark [class*="bg-[#ECF0F1]"]:not(button):not([class*="bg-[#ECF0F1]/"]) {
+  background-color: #131C26 !important;
+}
+
+html.dark [class*="bg-[#ECF0F1]/"] {
+  background-color: rgba(22, 32, 44, 0.75) !important;
+}
+
+html.dark [class*="hover:bg-[#ECF0F1]"]:hover {
+  background-color: #243342 !important;
+}
+
+/* Borders */
+html.dark [class*="border-[#BDC3C7]"],
+html.dark [class*="border-slate-200"],
+html.dark [class*="border-slate-300"],
+html.dark .border {
+  border-color: #2E3E50 !important;
+}
+
+html.dark [class*="border-[#BDC3C7]/"] {
+  border-color: rgba(46, 62, 80, 0.6) !important;
+}
+
+html.dark [class*="divide-[#BDC3C7]"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #2E3E50 !important;
+}
+
+/* 3D Cards in Dark Mode */
+html.dark .card-3d,
+html.dark .glass-card,
+html.dark .glass-panel {
+  background-color: #1C2836 !important;
+  border: 1px solid #2E3E50 !important;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 2px 4px 0 rgba(0, 0, 0, 0.4),
+    0 8px 24px -3px rgba(0, 0, 0, 0.55),
+    0 3px 8px -1px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .card-3d-hover,
+html.dark .glass-card-hover {
+  background-color: #1C2836 !important;
+  border: 1px solid #2E3E50 !important;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 2px 4px 0 rgba(0, 0, 0, 0.4),
+    0 8px 24px -3px rgba(0, 0, 0, 0.55),
+    0 3px 8px -1px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .card-3d-hover:hover,
+html.dark .glass-card-hover:hover {
+  background-color: #223142 !important;
+  border-color: #4A6382 !important;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 4px 8px 0 rgba(0, 0, 0, 0.45),
+    0 16px 36px -4px rgba(0, 0, 0, 0.65),
+    0 6px 14px -2px rgba(0, 0, 0, 0.35) !important;
+  transform: translateY(-2.5px);
+}
+
+html.dark .card-3d-subtle {
+  background-color: #1C2836 !important;
+  border-color: #2E3E50 !important;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.07),
+    0 1px 3px 0 rgba(0, 0, 0, 0.25),
+    0 4px 12px -1px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Sidebar and Header */
+html.dark aside {
+  background-color: #131D28 !important;
+  border-color: #273749 !important;
+}
+
+html.dark header {
+  background-color: #131D28 !important;
+  border-color: #273749 !important;
+}
+
+html.dark aside nav a[class*="bg-[#ECF0F1]"] {
+  background-color: #223142 !important;
+  border-color: #3E5165 !important;
+  color: #FFFFFF !important;
+}
+
+html.dark aside nav a {
+  color: #94A3B8 !important;
+}
+
+html.dark aside nav a:hover {
+  background-color: #1C2836 !important;
+  color: #FFFFFF !important;
+}
+
+/* Inputs, Textareas, Selects */
+html.dark input:not([type="checkbox"]):not([type="radio"]),
+html.dark textarea,
+html.dark select {
+  background-color: #131D28 !important;
+  color: #F8FAFC !important;
+  border-color: #2E3E50 !important;
+}
+
+html.dark select option {
+  background-color: #131D28 !important;
+  color: #F8FAFC !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748B !important;
+}
+
+/* Aceternity UI Search Input in Hero */
+html.dark form[class*="max-w-lg"] {
+  background-color: #131D28 !important;
+  border-color: #2E3E50 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark form[class*="max-w-lg"] input {
+  color: #F8FAFC !important;
+}
+
+html.dark form[class*="max-w-lg"] canvas {
+  filter: none !important;
+}
+
+/* Buttons in Dark Mode */
+html.dark button[class*="bg-[#2C3E50]"] {
+  background-color: #2E4053 !important;
+  border: 1px solid #455D75 !important;
+  color: #FFFFFF !important;
+}
+
+html.dark button[class*="bg-[#2C3E50]"]:hover {
+  background-color: #384E66 !important;
+}
+
+html.dark button[class*="bg-white"] {
+  background-color: #1C2836 !important;
+  border-color: #2E3E50 !important;
+  color: #F1F5F9 !important;
+}
+
+html.dark button[class*="bg-white"]:hover {
+  background-color: #243342 !important;
+}
+
+/* Badges in Dark Mode */
+html.dark [class*="bg-[#eef4f8]"] {
+  background-color: #1E293B !important;
+  color: #93C5FD !important;
+  border-color: #334155 !important;
+}
+
+html.dark [class*="bg-[#e8f7f0]"] {
+  background-color: rgba(6, 78, 59, 0.45) !important;
+  color: #6EE7B7 !important;
+  border-color: rgba(5, 150, 105, 0.5) !important;
+}
+
+html.dark [class*="bg-[#fff5df]"] {
+  background-color: rgba(120, 53, 15, 0.45) !important;
+  color: #FCD34D !important;
+  border-color: rgba(217, 119, 6, 0.5) !important;
+}
+
+html.dark [class*="bg-[#fff0f1]"] {
+  background-color: rgba(136, 19, 55, 0.45) !important;
+  color: #FDA4AF !important;
+  border-color: rgba(225, 29, 72, 0.5) !important;
+}
+
+html.dark [class*="bg-[#f0ebff]"] {
+  background-color: rgba(88, 28, 135, 0.45) !important;
+  color: #D8B4FE !important;
+  border-color: rgba(147, 51, 234, 0.5) !important;
+}
+
+
+
+/* 21st.dev Marquee Animations */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap, 1rem)));
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap, 1rem)));
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration, 40s) linear infinite;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration, 40s) linear infinite;
+}
+
