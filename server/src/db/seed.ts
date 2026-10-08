@@ -260,6 +260,7 @@ export async function runSeed() {
     { id: 'lt-sick', code: 'SICK', name: 'Medical & Sick Leave', days: 12, doc: true, imp: 'NORMAL', desc: 'Personal illness, hospitalization, medical appointments' },
     { id: 'lt-bereave', code: 'BEREAVEMENT', name: 'Compassionate / Bereavement Leave', days: 5, doc: false, imp: 'EXCEPTIONAL', desc: 'Leave granted upon death of an immediate family member' },
     { id: 'lt-parent', code: 'PARENTAL', name: 'Parental Bonding Leave', days: 60, doc: true, imp: 'HIGH_IMPORTANCE', desc: 'Birth, adoption or surrogacy parental care' },
+    { id: 'lt-unpaid', code: 'UNPAID', name: 'Unpaid Leave / Sabbatical', days: 30, doc: false, imp: 'NORMAL', desc: 'Extended personal leave or sabbatical without compensation' },
   ];
 
   for (const lt of leaveTypes) {

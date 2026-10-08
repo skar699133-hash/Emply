@@ -1,21 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Calendar, Sparkles, AlertCircle, ArrowRight, X } from 'lucide-react';
+import { Calendar, Sparkles, AlertCircle, ArrowRight, X, ChevronDown } from 'lucide-react';
 import { api } from '../../api/client';
 import { Badge } from '../ui/Badge';
+
+const DEFAULT_LEAVE_TYPES = [
+  { code: 'ANNUAL', name: 'Annual Paid Vacation', importance_level: 'NORMAL' },
+  { code: 'SICK', name: 'Medical & Sick Leave', importance_level: 'NORMAL' },
+  { code: 'PERSONAL', name: 'Personal & Family Emergency Leave', importance_level: 'HIGH_IMPORTANCE' },
+  { code: 'BEREAVEMENT', name: 'Compassionate / Bereavement Leave', importance_level: 'EXCEPTIONAL' },
+  { code: 'PARENTAL', name: 'Parental Bonding Leave', importance_level: 'HIGH_IMPORTANCE' },
+  { code: 'UNPAID', name: 'Unpaid Leave / Sabbatical', importance_level: 'NORMAL' },
+];
 
 interface LeaveApplicationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: (leaveId: string) => void;
+  initialStartDate?: string;
+  initialEndDate?: string;
+  initialDurationDays?: string | number;
 }
 
 export const LeaveApplicationModal: React.FC<LeaveApplicationModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
+  initialStartDate,
+  initialEndDate,
+  initialDurationDays,
 }) => {
-  const [leaveTypes, setLeaveTypes] = useState<any[]>([]);
+  const [leaveTypes, setLeaveTypes] = useState<any[]>(DEFAULT_LEAVE_TYPES);
   const [selectedType, setSelectedType] = useState('ANNUAL');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -28,21 +43,40 @@ export const LeaveApplicationModal: React.FC<LeaveApplicationModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      api.getLeaveTypes().then((types) => {
-        setLeaveTypes(types);
-        if (types.length > 0 && !selectedType) {
-          setSelectedType(types[0].code);
-        }
-      });
-      const nextWeek = new Date();
-      nextWeek.setDate(nextWeek.getDate() + 7);
-      const endNextWeek = new Date(nextWeek);
-      endNextWeek.setDate(endNextWeek.getDate() + 3);
+      api.getLeaveTypes()
+        .then((types) => {
+          if (Array.isArray(types) && types.length > 0) {
+            setLeaveTypes(types);
+            if (!types.some((t: any) => t.code === selectedType)) {
+              setSelectedType(types[0].code);
+            }
+          }
+        })
+        .catch((err) => {
+          console.warn('Using standard fallback leave types:', err);
+        });
 
-      setStartDate(nextWeek.toISOString().split('T')[0]);
-      setEndDate(endNextWeek.toISOString().split('T')[0]);
+      if (initialStartDate) {
+        setStartDate(initialStartDate);
+      } else {
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        setStartDate(nextWeek.toISOString().split('T')[0]);
+      }
+
+      if (initialEndDate) {
+        setEndDate(initialEndDate);
+      } else {
+        const endNextWeek = new Date();
+        endNextWeek.setDate(endNextWeek.getDate() + 10);
+        setEndDate(endNextWeek.toISOString().split('T')[0]);
+      }
+
+      if (initialDurationDays) {
+        setDurationDays(String(initialDurationDays));
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, initialStartDate, initialEndDate, initialDurationDays]);
 
   const handleAnalyze = async () => {
     if (!startDate || !endDate || !reason) {
@@ -128,17 +162,20 @@ export const LeaveApplicationModal: React.FC<LeaveApplicationModalProps> = ({
               <label className="block text-xs font-semibold text-[#2C3E50] mb-1.5">
                 Leave Type
               </label>
-              <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-full bg-white border border-[#BDC3C7] rounded-xl px-3 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#2C3E50] transition-colors shadow-2xs"
-              >
-                {leaveTypes.map((t) => (
-                  <option key={t.code} value={t.code}>
-                    {t.name} ({t.importance_level})
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={selectedType}
+                  onChange={(e) => setSelectedType(e.target.value)}
+                  className="w-full appearance-none bg-white border border-[#BDC3C7] rounded-xl pl-3 pr-10 py-2.5 text-xs text-[#2C3E50] font-medium focus:outline-none focus:border-[#2C3E50] focus:ring-1 focus:ring-[#2C3E50] transition-colors shadow-2xs cursor-pointer"
+                >
+                  {leaveTypes.map((t) => (
+                    <option key={t.code} value={t.code} className="text-[#2C3E50] bg-white py-1">
+                      {t.name} {t.importance_level ? `(${t.importance_level.replace(/_/g, ' ')})` : ''}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 text-[#7F8C8D] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
             </div>
 
             <div>

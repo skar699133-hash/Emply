@@ -66,6 +66,17 @@ router.get('/', authenticate, async (req: AuthenticatedRequest, res: Response): 
 router.get('/types', authenticate, async (_req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const typesRes = await db.query('SELECT * FROM leave_types ORDER BY name ASC');
+    if (!typesRes.rows || typesRes.rows.length === 0) {
+      res.json([
+        { id: 'lt-ann', code: 'ANNUAL', name: 'Annual Paid Vacation', importance_level: 'NORMAL' },
+        { id: 'lt-sick', code: 'SICK', name: 'Medical & Sick Leave', importance_level: 'NORMAL' },
+        { id: 'lt-pers', code: 'PERSONAL', name: 'Personal & Family Emergency Leave', importance_level: 'HIGH_IMPORTANCE' },
+        { id: 'lt-bereave', code: 'BEREAVEMENT', name: 'Compassionate / Bereavement Leave', importance_level: 'EXCEPTIONAL' },
+        { id: 'lt-parent', code: 'PARENTAL', name: 'Parental Bonding Leave', importance_level: 'HIGH_IMPORTANCE' },
+        { id: 'lt-unpaid', code: 'UNPAID', name: 'Unpaid Leave / Sabbatical', importance_level: 'NORMAL' },
+      ]);
+      return;
+    }
     res.json(typesRes.rows);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -157,7 +168,7 @@ router.post('/', authenticate, async (req: AuthenticatedRequest, res: Response):
     });
 
     const ltRes = await db.query('SELECT id, name FROM leave_types WHERE code = $1 LIMIT 1', [leaveTypeCode]);
-    const leaveTypeId = ltRes.rows[0]?.id;
+    const leaveTypeId = ltRes.rows[0]?.id || 'lt-ann';
 
     // Fetch employee manager
     const empRes = await db.query('SELECT manager_id FROM users WHERE id = $1', [user.userId]);
