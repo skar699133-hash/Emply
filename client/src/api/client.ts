@@ -1,4 +1,4 @@
-const API_BASE = '/api';
+const API_BASE = (import.meta as any).env?.VITE_API_URL || '/api';
 
 function getToken(): string | null {
   return localStorage.getItem('nexora_token');
