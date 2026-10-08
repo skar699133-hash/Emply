@@ -247,7 +247,7 @@ router.post('/', authenticate, async (req: AuthenticatedRequest, res: Response):
         user.userId,
         user.fullName,
         initialStatus,
-        `Request created and classified by Nexora AI. Assigned to target team.`,
+        `Request created and classified by EMPLY AI. Assigned to target team.`,
       ]
     );
 

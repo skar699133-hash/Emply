@@ -30,7 +30,7 @@ const testimonialsRow1: Testimonial[] = [
     name: 'Alex Rivera',
     role: 'Senior Software Engineer',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120',
-    content: 'Nexora resolved my payroll discrepancy in 30 seconds with automated evidence logging and instant manager notification.',
+    content: 'EMPLY resolved my payroll discrepancy in 30 seconds with automated evidence logging and instant manager notification.',
     tag: 'Payroll',
   },
   {
@@ -113,7 +113,7 @@ const testimonialsRow3: Testimonial[] = [
     name: 'Samuel Ross',
     role: 'VP of Business Operations',
     avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=120',
-    content: 'Employee satisfaction scores increased by 40% after transitioning to Nexora as our workplace intelligence layer.',
+    content: 'Employee satisfaction scores increased by 40% after transitioning to EMPLY as our workplace intelligence layer.',
     tag: 'Operations',
   },
 ];
@@ -304,11 +304,11 @@ export const LoginPage: React.FC = () => {
         
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#2C3E50] mx-auto flex items-center justify-center text-white font-black text-xl shadow-sm border border-[#34495E]">
-            <Sparkles className="w-6 h-6 text-[#ECF0F1]" />
+          <div className="w-12 h-12 rounded-2xl bg-[#2C3E50] mx-auto flex items-center justify-center text-white shadow-sm border border-[#34495E]">
+            <UserIcon className="w-6 h-6 text-[#ECF0F1]" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-[#2C3E50] tracking-tight">Nexora Workplace AI</h1>
+            <h1 className="text-2xl font-black text-[#2C3E50] tracking-tight">EMPLY</h1>
             <p className="text-xs text-[#7F8C8D] mt-0.5">Employee-First Operations & Coordination Platform</p>
           </div>
         </div>

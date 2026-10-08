@@ -20,7 +20,7 @@ export const RequestClassificationSchema = z.object({
 export type RequestClassification = z.infer<typeof RequestClassificationSchema>;
 
 export async function classifyRequest(userInput: string, employeeContext?: any): Promise<RequestClassification> {
-  const prompt = `You are Nexora's Enterprise Workplace Request Classification Engine.
+  const prompt = `You are EMPLY's Enterprise Workplace Request Classification Engine.
 Analyze the following employee message:
 "${userInput}"
 

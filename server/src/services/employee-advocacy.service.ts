@@ -66,7 +66,7 @@ export async function evaluateAdvocacyContext(params: {
     possiblePatterns,
     aiRecommendation,
     suggestedAction: 'REQUEST_FAIRNESS_REVIEW',
-    explanation: `Nexora Employee Advocacy mode provides an objective comparison of verified data without making unsupported accusations. Authorized humans make final determinations.`,
+    explanation: `EMPLY Employee Advocacy mode provides an objective comparison of verified data without making unsupported accusations. Authorized humans make final determinations.`,
     canTriggerFairnessReview: true,
   };
 }

@@ -13,7 +13,8 @@ import {
   Settings,
   LogOut,
   Sun,
-  Moon
+  Moon,
+  User
 } from 'lucide-react';
 
 export const Layout: React.FC = () => {
@@ -72,11 +73,11 @@ export const Layout: React.FC = () => {
       <aside className="w-60 bg-white border-r border-[#BDC3C7] p-4 flex flex-col fixed inset-y-0 left-0 z-40">
         {/* Brand */}
         <div className="flex items-center gap-2.5 px-2 py-3 mb-4 border-b border-[#BDC3C7]">
-          <div className="w-8 h-8 rounded-lg bg-[#2C3E50] text-white flex items-center justify-center font-extrabold text-sm">
-            W
+          <div className="w-8 h-8 rounded-lg bg-[#2C3E50] text-white flex items-center justify-center shadow-xs">
+            <User className="w-4.5 h-4.5 text-[#ECF0F1]" />
           </div>
           <div>
-            <div className="font-bold text-sm tracking-tight text-[#2C3E50]">Workplace AI</div>
+            <div className="font-extrabold text-sm tracking-tight text-[#2C3E50]">EMPLY</div>
             <div className="text-[10px] text-[#7F8C8D]">Employee-First Hub</div>
           </div>
         </div>
@@ -245,7 +246,7 @@ export const Layout: React.FC = () => {
 
           <button
             onClick={handleLogout}
-            title="Log Out of Workplace AI"
+            title="Log Out of EMPLY"
             className="w-full flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#7F8C8D] hover:text-[#C83D4B] hover:bg-[#FFF0F1] border border-transparent hover:border-[#FCD3D7] transition-all cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />

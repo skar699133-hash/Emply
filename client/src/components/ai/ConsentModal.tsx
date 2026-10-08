@@ -49,7 +49,7 @@ export const ConsentModal: React.FC<ConsentModalProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-[#2C3E50]">Review Before Submission</h3>
-              <p className="text-xs text-[#7F8C8D]">Here is what Nexora AI understood from your concern</p>
+              <p className="text-xs text-[#7F8C8D]">Here is what EMPLY AI understood from your concern</p>
             </div>
           </div>
           <button

@@ -13,6 +13,7 @@ import {
   Settings,
   LogOut,
   LogIn,
+  User,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -51,11 +52,11 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-2.5 group">
               <div className="w-9 h-9 rounded-xl bg-[#2C3E50] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-                <Sparkles className="w-5 h-5 text-[#ECF0F1]" />
+                <User className="w-5 h-5 text-[#ECF0F1]" />
               </div>
               <div>
                 <span className="font-extrabold text-lg tracking-tight text-[#2C3E50]">
-                  NEXORA
+                  EMPLY
                 </span>
                 <span className="hidden sm:inline-block ml-2 text-[10px] tracking-wider uppercase font-semibold text-[#2C3E50] bg-[#ECF0F1] px-2 py-0.5 rounded border border-[#BDC3C7]">
                   Workplace Operations

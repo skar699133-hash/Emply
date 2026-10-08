@@ -30,7 +30,7 @@ app.use(express.json());
 app.get('/api/health', (_req, res) => {
   res.json({
     status: 'ok',
-    service: 'Nexora AI Workplace Operations & HR Platform',
+    service: 'EMPLY AI Workplace Operations & HR Platform',
     timestamp: new Date().toISOString(),
   });
 });
@@ -58,7 +58,7 @@ async function startServer() {
 
     app.listen(config.port, () => {
       console.log(`=======================================================`);
-      console.log(`  NEXORA WORKPLACE AI PLATFORM BACKEND STARTED`);
+      console.log(`  EMPLY WORKPLACE AI PLATFORM BACKEND STARTED`);
       console.log(`  Listening on: http://localhost:${config.port}`);
       console.log(`  Health Check: http://localhost:${config.port}/api/health`);
       console.log(`=======================================================`);

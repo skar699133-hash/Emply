@@ -40,7 +40,7 @@ export async function answerPolicyQuestion(question: string): Promise<PolicyAnsw
   // Pick top matched policy
   const topPolicy = matchedPolicies[0];
 
-  const geminiPrompt = `You are Nexora's Grounded Policy Intelligence Agent.
+  const geminiPrompt = `You are EMPLY's Grounded Policy Intelligence Agent.
 Answer the employee's question using ONLY the provided verified company policy text below.
 DO NOT invent or extrapolate policies.
 If the policy does not address the question, clearly state that.
@@ -68,6 +68,6 @@ Return a concise, supportive answer explaining what the policy says.`;
     policyTitle: topPolicy.title,
     policySummary: topPolicy.summary,
     foundInPolicy: true,
-    nextStepRecommendation: "If you need specific approval or an exception, you can submit a request through Nexora AI.",
+    nextStepRecommendation: "If you need specific approval or an exception, you can submit a request through EMPLY AI.",
   };
 }

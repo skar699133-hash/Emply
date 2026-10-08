@@ -104,7 +104,7 @@ export const LeaveApplicationModal: React.FC<LeaveApplicationModalProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-[#2C3E50]">Apply for Leave</h3>
-              <p className="text-xs text-[#7F8C8D]">Nexora AI validates policy, team availability, and project dependencies</p>
+              <p className="text-xs text-[#7F8C8D]">EMPLY AI validates policy, team availability, and project dependencies</p>
             </div>
           </div>
           <button
