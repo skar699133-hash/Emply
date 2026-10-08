@@ -15,6 +15,9 @@ pids
 *.pid
 *.seed
 *.pid.lock
+.pgdata/
+*/.pgdata/
+**/.pgdata/
 
 # Dependency directories
 node_modules/
