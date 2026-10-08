@@ -9,9 +9,7 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  Sparkles,
   ShieldCheck,
-  Building2,
   Users
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -178,7 +176,7 @@ const TestimonialCard: React.FC<Testimonial> = ({ name, role, avatar, content, t
 );
 
 export const LoginPage: React.FC = () => {
-  const { login, loginWithGoogle, signUpWithEmail, switchUser, demoUsers, isFirebaseActive } = useAuth();
+  const { login, loginWithGoogle, signUpWithEmail, switchUser, demoUsers } = useAuth();
   const navigate = useNavigate();
 
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -297,15 +295,20 @@ export const LoginPage: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-[#ECF0F1]/80 via-transparent to-[#ECF0F1]/80" />
       </div>
 
+      {/* Ambient Glows for Realistic Glassmorphic Refraction */}
+      <div className="absolute w-80 h-80 rounded-full bg-blue-300/35 blur-3xl -top-10 -left-10 pointer-events-none" />
+      <div className="absolute w-96 h-96 rounded-full bg-slate-400/25 blur-3xl top-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="absolute w-80 h-80 rounded-full bg-teal-200/35 blur-3xl -bottom-10 -right-10 pointer-events-none" />
+
       {/* ========================================================================= */}
-      {/* TOP LAYER: CRISP WHITE/FROSTED LOGIN CARD */}
+      {/* TOP LAYER: GLASSMORPHIC LOGIN CARD */}
       {/* ========================================================================= */}
-      <div className="relative z-20 w-full max-w-md bg-white/95 backdrop-blur-md border border-[#BDC3C7] rounded-2xl p-6 sm:p-8 shadow-[0_16px_50px_rgba(44,62,80,0.12)] space-y-4.5 my-8">
+      <div className="relative z-20 w-full max-w-md bg-white/70 backdrop-blur-2xl border border-white/80 rounded-3xl p-6 sm:p-8 shadow-[0_20px_60px_-15px_rgba(44,62,80,0.16),0_0_0_1px_rgba(255,255,255,0.7)_inset] space-y-4.5 my-8 transition-all">
         
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#2C3E50] mx-auto flex items-center justify-center text-white shadow-sm border border-[#34495E]">
-            <UserIcon className="w-6 h-6 text-[#ECF0F1]" />
+          <div className="w-12 h-12 rounded-2xl bg-[#2C3E50] mx-auto flex items-center justify-center text-white shadow-md border border-white/30">
+            <UserIcon className="w-6 h-6 text-[#ECF0F1]" strokeWidth={2.2} />
           </div>
           <div>
             <h1 className="text-2xl font-black text-[#2C3E50] tracking-tight">EMPLY</h1>
@@ -313,39 +316,16 @@ export const LoginPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Live Firebase Connection Badge */}
-        <div className={`p-2.5 rounded-lg border text-xs flex items-center justify-between gap-2 ${
-          isFirebaseActive 
-            ? 'bg-[#E8F7F0] border-[#BCE7D3] text-[#138A5B]' 
-            : 'bg-[#F4F6F7] border-[#BDC3C7] text-[#7F8C8D]'
-        }`}>
-          <div className="flex items-center gap-2">
-            {isFirebaseActive ? (
-              <CheckCircle2 className="w-4 h-4 text-[#138A5B] shrink-0" />
-            ) : (
-              <AlertCircle className="w-4 h-4 text-[#7F8C8D] shrink-0" />
-            )}
-            <span className="font-medium text-[11px]">
-              {isFirebaseActive 
-                ? 'Firebase Auth & Cloud Firestore Connected' 
-                : 'Local Mode Active'}
-            </span>
-          </div>
-          <span className="text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded bg-white/80 border border-current">
-            {isFirebaseActive ? 'one7-001' : 'Local'}
-          </span>
-        </div>
-
         {/* Status Feedback Messages */}
         {errorMsg && (
-          <div className="p-3 rounded-lg bg-[#FFF0F1] border border-[#FCD3D7] text-xs text-[#C83D4B] flex items-start gap-2">
+          <div className="p-3 rounded-xl bg-[#FFF0F1]/85 backdrop-blur-md border border-[#FCD3D7] text-xs text-[#C83D4B] flex items-start gap-2 shadow-2xs">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{errorMsg}</span>
           </div>
         )}
 
         {successMsg && (
-          <div className="p-3 rounded-lg bg-[#E8F7F0] border border-[#BCE7D3] text-xs text-[#138A5B] flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-[#E8F7F0]/85 backdrop-blur-md border border-[#BCE7D3] text-xs text-[#138A5B] flex items-center gap-2 shadow-2xs">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{successMsg}</span>
           </div>
@@ -356,7 +336,7 @@ export const LoginPage: React.FC = () => {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={googleLoading || loading}
-          className="w-full py-2.5 px-4 rounded-xl bg-white border border-[#BDC3C7] hover:bg-[#ECF0F1] text-[#2C3E50] text-xs font-semibold transition-all flex items-center justify-center gap-2.5 shadow-xs cursor-pointer disabled:opacity-50"
+          className="w-full py-2.5 px-4 rounded-xl bg-white/75 hover:bg-white/95 backdrop-blur-md border border-white/85 text-[#2C3E50] text-xs font-semibold transition-all flex items-center justify-center gap-2.5 shadow-xs hover:shadow-sm cursor-pointer disabled:opacity-50"
         >
           {/* Official Google G Logo */}
           <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -382,20 +362,20 @@ export const LoginPage: React.FC = () => {
 
         {/* Divider */}
         <div className="relative flex items-center justify-center my-3">
-          <div className="border-t border-[#BDC3C7]/70 w-full" />
-          <span className="bg-white px-3 text-[10px] uppercase font-bold text-[#7F8C8D] absolute tracking-wider">
+          <div className="border-t border-[#BDC3C7]/50 w-full" />
+          <span className="bg-white/80 backdrop-blur-md border border-white/80 px-3 py-0.5 rounded-full text-[10px] uppercase font-bold text-[#7F8C8D] absolute tracking-wider shadow-2xs">
             or with work email
           </span>
         </div>
 
         {/* Mode Selector Tabs (Sign In vs Create Account) */}
-        <div className="flex rounded-xl bg-[#ECF0F1] p-1 text-xs">
+        <div className="flex rounded-xl bg-[#2C3E50]/5 backdrop-blur-md border border-white/60 p-1 text-xs">
           <button
             type="button"
             onClick={() => setMode('signin')}
             className={`flex-1 py-1.5 rounded-lg font-semibold transition-all ${
               mode === 'signin' 
-                ? 'bg-white text-[#2C3E50] shadow-xs' 
+                ? 'bg-white/90 text-[#2C3E50] shadow-xs' 
                 : 'text-[#7F8C8D] hover:text-[#2C3E50]'
             }`}
           >
@@ -406,7 +386,7 @@ export const LoginPage: React.FC = () => {
             onClick={() => setMode('signup')}
             className={`flex-1 py-1.5 rounded-lg font-semibold transition-all ${
               mode === 'signup' 
-                ? 'bg-white text-[#2C3E50] shadow-xs' 
+                ? 'bg-white/90 text-[#2C3E50] shadow-xs' 
                 : 'text-[#7F8C8D] hover:text-[#2C3E50]'
             }`}
           >
@@ -427,7 +407,7 @@ export const LoginPage: React.FC = () => {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Alex Rivera"
-                  className="w-full bg-white border border-[#BDC3C7] rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#2C3E50] placeholder:text-[#7F8C8D]"
+                  className="w-full bg-white/70 backdrop-blur-md border border-white/80 rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] focus:bg-white/95 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#7F8C8D] transition-all shadow-2xs"
                 />
               </div>
             </div>
@@ -443,7 +423,7 @@ export const LoginPage: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@company.com"
-                className="w-full bg-white border border-[#BDC3C7] rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#2C3E50] placeholder:text-[#7F8C8D]"
+                className="w-full bg-white/70 backdrop-blur-md border border-white/80 rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] focus:bg-white/95 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#7F8C8D] transition-all shadow-2xs"
               />
             </div>
           </div>
@@ -463,7 +443,7 @@ export const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-white border border-[#BDC3C7] rounded-xl pl-9 pr-9 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#2C3E50] placeholder:text-[#7F8C8D]"
+                className="w-full bg-white/70 backdrop-blur-md border border-white/80 rounded-xl pl-9 pr-9 py-2 text-xs text-[#2C3E50] focus:bg-white/95 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#7F8C8D] transition-all shadow-2xs"
               />
               <button
                 type="button"
@@ -478,7 +458,7 @@ export const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading || googleLoading}
-            className="w-full py-2.5 rounded-xl bg-[#2C3E50] hover:bg-[#34495E] text-white font-semibold text-xs shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-50"
+            className="w-full py-2.5 rounded-xl bg-[#2C3E50] hover:bg-[#34495E] text-white font-semibold text-xs shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-50"
           >
             {loading ? (
               <span>Authenticating...</span>
@@ -492,7 +472,7 @@ export const LoginPage: React.FC = () => {
         </form>
 
         {/* Demo Personas for Quick Access */}
-        <div className="pt-3 border-t border-[#BDC3C7]/60 space-y-2">
+        <div className="pt-3 border-t border-[#BDC3C7]/40 space-y-2">
           <div className="flex items-center justify-between text-[11px]">
             <span className="font-semibold text-[#2C3E50] flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-[#7F8C8D]" />
@@ -511,13 +491,13 @@ export const LoginPage: React.FC = () => {
                   type="button"
                   onClick={() => handleDemoSelect(u.email)}
                   disabled={loading}
-                  className="p-2 rounded-xl bg-[#ECF0F1] hover:bg-[#BDC3C7]/40 text-left border border-[#BDC3C7] transition-all flex flex-col cursor-pointer group"
+                  className="p-2 rounded-xl bg-white/55 hover:bg-white/90 backdrop-blur-md text-left border border-white/80 hover:border-white transition-all flex flex-col cursor-pointer group shadow-2xs hover:shadow-xs"
                 >
                   <div className="flex items-center justify-between w-full">
                     <span className="font-semibold text-[11px] text-[#2C3E50] group-hover:text-black truncate">
                       {name}
                     </span>
-                    <span className="text-[9px] uppercase px-1 py-0.2 rounded bg-white text-[#2C3E50] font-bold border border-[#BDC3C7]">
+                    <span className="text-[9px] uppercase px-1 py-0.2 rounded bg-white/90 text-[#2C3E50] font-bold border border-white/80">
                       {role === 'EMPLOYEE' ? 'Emp' : role === 'MANAGER' ? 'Mgr' : role === 'SKIP_LEVEL_MANAGER' ? 'VP' : 'HR'}
                     </span>
                   </div>
@@ -531,14 +511,12 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Footer info */}
-        <div className="pt-1 text-center text-[10px] text-[#7F8C8D] flex items-center justify-center gap-3">
+        <div className="pt-1 text-center text-[10px] text-[#7F8C8D] flex items-center justify-center gap-2">
           <span className="flex items-center gap-1">
             <ShieldCheck className="w-3 h-3 text-[#2C3E50]" /> Enterprise Grade
           </span>
           <span>•</span>
-          <span className="flex items-center gap-1">
-            <Building2 className="w-3 h-3 text-[#2C3E50]" /> Cloud Firestore
-          </span>
+          <span>End-to-End Encrypted</span>
         </div>
 
       </div>
