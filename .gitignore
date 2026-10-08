@@ -41,6 +41,10 @@ build/
 .env.test.local
 .env.production.local
 
+# Service Account Keys & Secrets
+*serviceAccountKey*.json
+*.pem
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
