@@ -256,7 +256,7 @@ export const LoginPage: React.FC = () => {
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none">
         {/* Angled 3D Isometric / Perspective Container */}
         <div 
-          className="flex flex-col gap-3.5 w-[160vw] max-w-none transform origin-center opacity-45"
+          className="flex flex-col gap-3.5 w-[160vw] max-w-none transform origin-center opacity-85"
           style={{
             transform: 'perspective(1200px) rotateX(16deg) rotateY(-8deg) rotateZ(-12deg) scale(1.08)',
           }}
@@ -290,44 +290,56 @@ export const LoginPage: React.FC = () => {
           </Marquee>
         </div>
 
-        {/* Soft Radial & Edge Gradients for Depth & Legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#ECF0F1] via-[#ECF0F1]/30 to-[#ECF0F1]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#ECF0F1]/80 via-transparent to-[#ECF0F1]/80" />
+        {/* Soft Edge Gradients for Smooth Vignette without Hiding Center */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#ECF0F1] via-transparent to-[#ECF0F1] opacity-75" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#ECF0F1] via-transparent to-[#ECF0F1] opacity-75" />
       </div>
 
-      {/* Ambient Glows for Realistic Glassmorphic Refraction */}
-      <div className="absolute w-80 h-80 rounded-full bg-blue-300/35 blur-3xl -top-10 -left-10 pointer-events-none" />
-      <div className="absolute w-96 h-96 rounded-full bg-slate-400/25 blur-3xl top-1/2 -translate-y-1/2 pointer-events-none" />
-      <div className="absolute w-80 h-80 rounded-full bg-teal-200/35 blur-3xl -bottom-10 -right-10 pointer-events-none" />
+      {/* Vibrant Ambient Glows for Authentic Glass Refraction */}
+      <div className="absolute w-[520px] h-[520px] rounded-full bg-gradient-to-br from-indigo-500/25 via-blue-400/25 to-sky-300/25 blur-3xl -top-20 -left-20 pointer-events-none" />
+      <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-tl from-emerald-400/25 via-teal-300/20 to-cyan-300/20 blur-3xl -bottom-20 -right-20 pointer-events-none" />
+      <div className="absolute w-[360px] h-[360px] rounded-full bg-purple-400/20 blur-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
       {/* ========================================================================= */}
-      {/* TOP LAYER: GLASSMORPHIC LOGIN CARD */}
+      {/* TOP LAYER: AUTHENTIC GLASSMORPHIC LOGIN CARD */}
       {/* ========================================================================= */}
-      <div className="relative z-20 w-full max-w-md bg-white/70 backdrop-blur-2xl border border-white/80 rounded-3xl p-6 sm:p-8 shadow-[0_20px_60px_-15px_rgba(44,62,80,0.16),0_0_0_1px_rgba(255,255,255,0.7)_inset] space-y-4.5 my-8 transition-all">
+      <div 
+        style={{
+          backdropFilter: 'blur(28px)',
+          WebkitBackdropFilter: 'blur(28px)',
+        }}
+        className="relative z-20 w-full max-w-md bg-white/35 border border-white/60 rounded-3xl p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(44,62,80,0.18),0_0_0_1px_rgba(255,255,255,0.8)_inset] space-y-4.5 my-8 transition-all"
+      >
         
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#2C3E50] mx-auto flex items-center justify-center text-white shadow-md border border-white/30">
+          <div className="w-12 h-12 rounded-2xl bg-[#2C3E50]/90 backdrop-blur-md mx-auto flex items-center justify-center text-white shadow-md border border-white/30">
             <UserIcon className="w-6 h-6 text-[#ECF0F1]" strokeWidth={2.2} />
           </div>
           <div>
             <h1 className="text-2xl font-black text-[#2C3E50] tracking-tight">EMPLY</h1>
-            <p className="text-xs text-[#7F8C8D] mt-0.5">Employee-First Operations & Coordination Platform</p>
+            <p className="text-xs text-[#2C3E50]/80 font-medium mt-0.5">Employee-First Operations & Coordination Platform</p>
           </div>
         </div>
 
         {/* Status Feedback Messages */}
         {errorMsg && (
-          <div className="p-3 rounded-xl bg-[#FFF0F1]/85 backdrop-blur-md border border-[#FCD3D7] text-xs text-[#C83D4B] flex items-start gap-2 shadow-2xs">
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-            <span>{errorMsg}</span>
+          <div 
+            style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+            className="p-3 rounded-xl bg-rose-50/80 border border-rose-200/90 text-xs text-rose-800 flex items-start gap-2 shadow-xs"
+          >
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
+            <span className="font-medium">{errorMsg}</span>
           </div>
         )}
 
         {successMsg && (
-          <div className="p-3 rounded-xl bg-[#E8F7F0]/85 backdrop-blur-md border border-[#BCE7D3] text-xs text-[#138A5B] flex items-center gap-2 shadow-2xs">
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
-            <span>{successMsg}</span>
+          <div 
+            style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+            className="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/90 text-xs text-emerald-800 flex items-center gap-2 shadow-xs"
+          >
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+            <span className="font-medium">{successMsg}</span>
           </div>
         )}
 
@@ -336,7 +348,8 @@ export const LoginPage: React.FC = () => {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={googleLoading || loading}
-          className="w-full py-2.5 px-4 rounded-xl bg-white/75 hover:bg-white/95 backdrop-blur-md border border-white/85 text-[#2C3E50] text-xs font-semibold transition-all flex items-center justify-center gap-2.5 shadow-xs hover:shadow-sm cursor-pointer disabled:opacity-50"
+          style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+          className="w-full py-2.5 px-4 rounded-xl bg-white/45 hover:bg-white/75 border border-white/70 text-[#2C3E50] text-xs font-semibold transition-all flex items-center justify-center gap-2.5 shadow-xs hover:shadow-sm cursor-pointer disabled:opacity-50"
         >
           {/* Official Google G Logo */}
           <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -362,21 +375,27 @@ export const LoginPage: React.FC = () => {
 
         {/* Divider */}
         <div className="relative flex items-center justify-center my-3">
-          <div className="border-t border-[#BDC3C7]/50 w-full" />
-          <span className="bg-white/80 backdrop-blur-md border border-white/80 px-3 py-0.5 rounded-full text-[10px] uppercase font-bold text-[#7F8C8D] absolute tracking-wider shadow-2xs">
+          <div className="border-t border-[#2C3E50]/20 w-full" />
+          <span 
+            style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+            className="bg-white/50 border border-white/60 px-3 py-0.5 rounded-full text-[10px] uppercase font-bold text-[#2C3E50]/75 absolute tracking-wider shadow-2xs"
+          >
             or with work email
           </span>
         </div>
 
         {/* Mode Selector Tabs (Sign In vs Create Account) */}
-        <div className="flex rounded-xl bg-[#2C3E50]/5 backdrop-blur-md border border-white/60 p-1 text-xs">
+        <div 
+          style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+          className="flex rounded-xl bg-white/25 border border-white/50 p-1 text-xs"
+        >
           <button
             type="button"
             onClick={() => setMode('signin')}
             className={`flex-1 py-1.5 rounded-lg font-semibold transition-all ${
               mode === 'signin' 
-                ? 'bg-white/90 text-[#2C3E50] shadow-xs' 
-                : 'text-[#7F8C8D] hover:text-[#2C3E50]'
+                ? 'bg-white/80 text-[#2C3E50] shadow-xs' 
+                : 'text-[#2C3E50]/70 hover:text-[#2C3E50]'
             }`}
           >
             Sign In
@@ -386,8 +405,8 @@ export const LoginPage: React.FC = () => {
             onClick={() => setMode('signup')}
             className={`flex-1 py-1.5 rounded-lg font-semibold transition-all ${
               mode === 'signup' 
-                ? 'bg-white/90 text-[#2C3E50] shadow-xs' 
-                : 'text-[#7F8C8D] hover:text-[#2C3E50]'
+                ? 'bg-white/80 text-[#2C3E50] shadow-xs' 
+                : 'text-[#2C3E50]/70 hover:text-[#2C3E50]'
             }`}
           >
             Create Account
@@ -398,57 +417,60 @@ export const LoginPage: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-3">
           {mode === 'signup' && (
             <div>
-              <label className="block text-[11px] font-semibold text-[#2C3E50] mb-1">Full Name</label>
+              <label className="block text-[11px] font-bold text-[#2C3E50] mb-1">Full Name</label>
               <div className="relative">
-                <UserIcon className="w-4 h-4 text-[#7F8C8D] absolute left-3 top-2.5" />
+                <UserIcon className="w-4 h-4 text-[#2C3E50]/60 absolute left-3 top-2.5" />
                 <input
                   type="text"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Alex Rivera"
-                  className="w-full bg-white/70 backdrop-blur-md border border-white/80 rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] focus:bg-white/95 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#7F8C8D] transition-all shadow-2xs"
+                  style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                  className="w-full bg-white/40 border border-white/60 rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] font-medium focus:bg-white/70 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#2C3E50]/50 transition-all shadow-2xs"
                 />
               </div>
             </div>
           )}
 
           <div>
-            <label className="block text-[11px] font-semibold text-[#2C3E50] mb-1">Work Email</label>
+            <label className="block text-[11px] font-bold text-[#2C3E50] mb-1">Work Email</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-[#7F8C8D] absolute left-3 top-2.5" />
+              <Mail className="w-4 h-4 text-[#2C3E50]/60 absolute left-3 top-2.5" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@company.com"
-                className="w-full bg-white/70 backdrop-blur-md border border-white/80 rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] focus:bg-white/95 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#7F8C8D] transition-all shadow-2xs"
+                style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                className="w-full bg-white/40 border border-white/60 rounded-xl pl-9 pr-3 py-2 text-xs text-[#2C3E50] font-medium focus:bg-white/70 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#2C3E50]/50 transition-all shadow-2xs"
               />
             </div>
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-[11px] font-semibold text-[#2C3E50]">Password</label>
+              <label className="text-[11px] font-bold text-[#2C3E50]">Password</label>
               {mode === 'signin' && (
-                <span className="text-[10px] text-[#7F8C8D]">Demo pass: password123</span>
+                <span className="text-[10px] text-[#2C3E50]/70 font-medium">Demo pass: password123</span>
               )}
             </div>
             <div className="relative">
-              <Lock className="w-4 h-4 text-[#7F8C8D] absolute left-3 top-2.5" />
+              <Lock className="w-4 h-4 text-[#2C3E50]/60 absolute left-3 top-2.5" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-white/70 backdrop-blur-md border border-white/80 rounded-xl pl-9 pr-9 py-2 text-xs text-[#2C3E50] focus:bg-white/95 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#7F8C8D] transition-all shadow-2xs"
+                style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                className="w-full bg-white/40 border border-white/60 rounded-xl pl-9 pr-9 py-2 text-xs text-[#2C3E50] font-medium focus:bg-white/70 focus:outline-none focus:border-[#2C3E50] placeholder:text-[#2C3E50]/50 transition-all shadow-2xs"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-[#7F8C8D] hover:text-[#2C3E50] cursor-pointer"
+                className="absolute right-3 top-2.5 text-[#2C3E50]/60 hover:text-[#2C3E50] cursor-pointer"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -458,7 +480,7 @@ export const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading || googleLoading}
-            className="w-full py-2.5 rounded-xl bg-[#2C3E50] hover:bg-[#34495E] text-white font-semibold text-xs shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-50"
+            className="w-full py-2.5 rounded-xl bg-[#2C3E50]/90 hover:bg-[#2C3E50] text-white font-semibold text-xs shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-50"
           >
             {loading ? (
               <span>Authenticating...</span>
@@ -472,13 +494,13 @@ export const LoginPage: React.FC = () => {
         </form>
 
         {/* Demo Personas for Quick Access */}
-        <div className="pt-3 border-t border-[#BDC3C7]/40 space-y-2">
+        <div className="pt-3 border-t border-[#2C3E50]/20 space-y-2">
           <div className="flex items-center justify-between text-[11px]">
-            <span className="font-semibold text-[#2C3E50] flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5 text-[#7F8C8D]" />
+            <span className="font-bold text-[#2C3E50] flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-[#2C3E50]/70" />
               Quick Demo Personas:
             </span>
-            <span className="text-[10px] text-[#7F8C8D]">1-click login</span>
+            <span className="text-[10px] text-[#2C3E50]/70 font-medium">1-click login</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -491,17 +513,18 @@ export const LoginPage: React.FC = () => {
                   type="button"
                   onClick={() => handleDemoSelect(u.email)}
                   disabled={loading}
-                  className="p-2 rounded-xl bg-white/55 hover:bg-white/90 backdrop-blur-md text-left border border-white/80 hover:border-white transition-all flex flex-col cursor-pointer group shadow-2xs hover:shadow-xs"
+                  style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+                  className="p-2 rounded-xl bg-white/35 hover:bg-white/70 text-left border border-white/50 hover:border-white/90 transition-all flex flex-col cursor-pointer group shadow-2xs hover:shadow-xs"
                 >
                   <div className="flex items-center justify-between w-full">
-                    <span className="font-semibold text-[11px] text-[#2C3E50] group-hover:text-black truncate">
+                    <span className="font-bold text-[11px] text-[#2C3E50] group-hover:text-black truncate">
                       {name}
                     </span>
-                    <span className="text-[9px] uppercase px-1 py-0.2 rounded bg-white/90 text-[#2C3E50] font-bold border border-white/80">
+                    <span className="text-[9px] uppercase px-1 py-0.2 rounded bg-white/75 text-[#2C3E50] font-extrabold border border-white/60">
                       {role === 'EMPLOYEE' ? 'Emp' : role === 'MANAGER' ? 'Mgr' : role === 'SKIP_LEVEL_MANAGER' ? 'VP' : 'HR'}
                     </span>
                   </div>
-                  <span className="text-[10px] text-[#7F8C8D] truncate mt-0.5">
+                  <span className="text-[10px] text-[#2C3E50]/70 truncate mt-0.5 font-medium">
                     {u.jobTitle || u.job_title || u.title || u.email}
                   </span>
                 </button>
@@ -511,7 +534,7 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Footer info */}
-        <div className="pt-1 text-center text-[10px] text-[#7F8C8D] flex items-center justify-center gap-2">
+        <div className="pt-1 text-center text-[10px] text-[#2C3E50]/70 flex items-center justify-center gap-2 font-medium">
           <span className="flex items-center gap-1">
             <ShieldCheck className="w-3 h-3 text-[#2C3E50]" /> Enterprise Grade
           </span>
